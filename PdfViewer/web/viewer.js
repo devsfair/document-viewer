@@ -2149,7 +2149,18 @@ var webViewerFileInputChange;
       return;
     }
 
-    var file = evt.fileInput.files[0];
+      var file = evt.fileInput.files[0];
+      const config = { headers: { 'content-type': 'multipart/form-data' } }
+      var formData = new FormData();
+      formData.append("UploadImage", file);
+      axios.get('api/file-processor/get-pdf', formData, config)
+          .then(function (response) {
+              debugger;
+              console.log(response);
+          })
+          .catch(function (error) {
+              console.log(error.response.data.Message);
+          });
 
     if (URL.createObjectURL && !_app_options.AppOptions.get("disableCreateObjectURL")) {
       var url = URL.createObjectURL(file);
@@ -4300,7 +4311,7 @@ var defaultOptions = {
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
   },
   defaultUrl: {
-    value: "compressed.tracemonkey-pldi-09.pdf",
+    value: "temp/file-example_PDF_1MB.pdf",
     kind: OptionKind.VIEWER
   },
   defaultZoomValue: {
