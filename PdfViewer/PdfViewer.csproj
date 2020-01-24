@@ -270,10 +270,15 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LICENSE" />
     <Content Include="build\pdf.js.map" />
     <Content Include="build\pdf.worker.js.map" />
-    <Content Include="LICENSE" />
     <None Include="packages.config" />
+    <Content Include="Scripts\axios.map" />
+    <Content Include="Scripts\axios.min.map" />
+    <Content Include="Temp\file-example_PDF_1MB.pdf" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\Home\Test.cshtml" />
     <Content Include="web\cmaps\78-EUC-H.bcmap" />
     <Content Include="web\cmaps\78-EUC-V.bcmap" />
     <Content Include="web\cmaps\78-H.bcmap" />
@@ -547,11 +552,6 @@
     <Content Include="web\locale\zh-CN\viewer.properties" />
     <Content Include="web\locale\zh-TW\viewer.properties" />
     <Content Include="web\viewer.js.map" />
-    <Content Include="Scripts\axios.map" />
-    <Content Include="Scripts\axios.min.map" />
-    <Content Include="Temp\file-example_PDF_1MB.pdf" />
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-    <Content Include="Views\Home\Test.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

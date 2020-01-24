@@ -121,11 +121,11 @@ var pdfjsWebApp, pdfjsWebAppOptions;
 }
 ;
 {
-  __webpack_require__(36);
+  __webpack_require__(38);
 }
 ;
 {
-  __webpack_require__(41);
+  __webpack_require__(43);
 }
 
 function getViewerConfiguration() {
@@ -324,6 +324,8 @@ var _secondary_toolbar = __webpack_require__(32);
 var _toolbar = __webpack_require__(34);
 
 var _view_history = __webpack_require__(35);
+
+var _canvas = __webpack_require__(36);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -2144,25 +2146,15 @@ function webViewerHashchange(evt) {
 var webViewerFileInputChange;
 {
   webViewerFileInputChange = function webViewerFileInputChange(evt) {
-    debugger;
     if (PDFViewerApplication.pdfViewer && PDFViewerApplication.pdfViewer.isInPresentationMode) {
       return;
     }
 
-      var file = evt.fileInput.files[0];
-      const config = { headers: { 'content-type': 'multipart/form-data' } }
-      var formData = new FormData();
-      formData.append("UploadImage", file);
-      axios.get('api/file-processor/get-pdf', formData, config)
-          .then(function (response) {
-              debugger;
-              console.log(response);
-          })
-          .catch(function (error) {
-              console.log(error.response.data.Message);
-          });
+    var file = evt.fileInput.files[0];
 
-    if (URL.createObjectURL && !_app_options.AppOptions.get("disableCreateObjectURL")) {
+    if (file && file.type.includes("image")) {
+      processImageFiles(file);
+    } else if (URL.createObjectURL && !_app_options.AppOptions.get("disableCreateObjectURL")) {
       var url = URL.createObjectURL(file);
 
       if (file.name) {
@@ -2717,6 +2709,26 @@ function webViewerKeyDown(evt) {
   if (handled) {
     evt.preventDefault();
   }
+}
+
+function processImageFiles(file) {
+  var config = {
+    headers: {
+      'content-type': 'multipart/form-data'
+    }
+  };
+  var formData = new FormData();
+  formData.append("UploadImage", file);
+  axios.post('/api/file-processor/process-image', formData, config).then(function (response) {
+    var baseUrl = window.location.origin + '/' + window.location.pathname.split('/')[1];
+    var url = {
+      url: baseUrl + response.data.url,
+      originalUrl: response.data.fileName
+    };
+    PDFViewerApplication.open(url);
+  })["catch"](function (error) {
+    console.log(error.response.data.Message);
+  });
 }
 
 function apiPageLayoutToSpreadMode(layout) {
@@ -13993,6 +14005,141 @@ exports.ViewHistory = ViewHistory;
 "use strict";
 
 
+var parseFont = __webpack_require__(37);
+
+exports.parseFont = parseFont;
+
+exports.createCanvas = function (width, height) {
+  return Object.assign(document.createElement('canvas'), {
+    width: width,
+    height: height
+  });
+};
+
+exports.createImageData = function (array, width, height) {
+  switch (arguments.length) {
+    case 0:
+      return new ImageData();
+
+    case 1:
+      return new ImageData(array);
+
+    case 2:
+      return new ImageData(array, width);
+
+    default:
+      return new ImageData(array, width, height);
+  }
+};
+
+exports.loadImage = function (src, options) {
+  return new Promise(function (resolve, reject) {
+    var image = Object.assign(document.createElement('img'), options);
+
+    function cleanup() {
+      image.onload = null;
+      image.onerror = null;
+    }
+
+    image.onload = function () {
+      cleanup();
+      resolve(image);
+    };
+
+    image.onerror = function () {
+      cleanup();
+      reject(new Error('Failed to load the image "' + src + '"'));
+    };
+
+    image.src = src;
+  });
+};
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var weights = 'bold|bolder|lighter|[1-9]00',
+    styles = 'italic|oblique',
+    variants = 'small-caps',
+    stretches = 'ultra-condensed|extra-condensed|condensed|semi-condensed|semi-expanded|expanded|extra-expanded|ultra-expanded',
+    units = 'px|pt|pc|in|cm|mm|%|em|ex|ch|rem|q',
+    string = '\'([^\']+)\'|"([^"]+)"|[\\w\\s-]+';
+var weightRe = new RegExp('(' + weights + ') +', 'i');
+var styleRe = new RegExp('(' + styles + ') +', 'i');
+var variantRe = new RegExp('(' + variants + ') +', 'i');
+var stretchRe = new RegExp('(' + stretches + ') +', 'i');
+var sizeFamilyRe = new RegExp('([\\d\\.]+)(' + units + ') *' + '((?:' + string + ')( *, *(?:' + string + '))*)');
+var cache = {};
+var defaultHeight = 16;
+
+module.exports = function (str) {
+  if (cache[str]) return cache[str];
+  var sizeFamily = sizeFamilyRe.exec(str);
+  if (!sizeFamily) return;
+  var font = {
+    weight: 'normal',
+    style: 'normal',
+    stretch: 'normal',
+    variant: 'normal',
+    size: parseFloat(sizeFamily[1]),
+    unit: sizeFamily[2],
+    family: sizeFamily[3].replace(/["']/g, '').replace(/ *, */g, ',')
+  };
+  var weight, style, variant, stretch;
+  var substr = str.substring(0, sizeFamily.index);
+  if (weight = weightRe.exec(substr)) font.weight = weight[1];
+  if (style = styleRe.exec(substr)) font.style = style[1];
+  if (variant = variantRe.exec(substr)) font.variant = variant[1];
+  if (stretch = stretchRe.exec(substr)) font.stretch = stretch[1];
+
+  switch (font.unit) {
+    case 'pt':
+      font.size /= 0.75;
+      break;
+
+    case 'pc':
+      font.size *= 16;
+      break;
+
+    case 'in':
+      font.size *= 96;
+      break;
+
+    case 'cm':
+      font.size *= 96.0 / 2.54;
+      break;
+
+    case 'mm':
+      font.size *= 96.0 / 25.4;
+      break;
+
+    case '%':
+      break;
+
+    case 'em':
+    case 'rem':
+      font.size *= defaultHeight / 0.75;
+      break;
+
+    case 'q':
+      font.size *= 96 / 25.4 / 4;
+      break;
+  }
+
+  return cache[str] = font;
+};
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -14002,11 +14149,11 @@ var _regenerator = _interopRequireDefault(__webpack_require__(2));
 
 var _app = __webpack_require__(1);
 
-var _preferences = __webpack_require__(37);
+var _preferences = __webpack_require__(39);
 
-var _download_manager = __webpack_require__(38);
+var _download_manager = __webpack_require__(40);
 
-var _genericl10n = __webpack_require__(39);
+var _genericl10n = __webpack_require__(41);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -14123,7 +14270,7 @@ GenericExternalServices.createL10n = function (_ref) {
 _app.PDFViewerApplication.externalServices = GenericExternalServices;
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14477,7 +14624,7 @@ function () {
 exports.BasePreferences = BasePreferences;
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14581,7 +14728,7 @@ function () {
 exports.DownloadManager = DownloadManager;
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14594,7 +14741,7 @@ exports.GenericL10n = void 0;
 
 var _regenerator = _interopRequireDefault(__webpack_require__(2));
 
-__webpack_require__(40);
+__webpack_require__(42);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -14760,7 +14907,7 @@ function () {
 exports.GenericL10n = GenericL10n;
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15583,7 +15730,7 @@ document.webL10n = function (window, document, undefined) {
 }(window, document);
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

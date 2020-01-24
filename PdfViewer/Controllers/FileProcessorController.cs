@@ -18,9 +18,6 @@ namespace PdfViewer.Controllers
             if (!Request.Content.IsMimeMultipartContent())
                 return BadRequest("Unsupported media type.");
 
-            if (Request.Content.Headers.ContentLength >= 4 * 1024 * 1024)
-                return BadRequest("File is bigger than 4MB");
-
             var provider = await Request.Content.ReadAsMultipartAsync(new InMemoryMultipartFormDataStreamProvider());
             if (!provider.Files.Any())
                 return BadRequest("You didn't upload any image.");
@@ -30,7 +27,8 @@ namespace PdfViewer.Controllers
                 return BadRequest("You must upload an image.");
 
             var inputStream = await originalFile.ReadAsStreamAsync();
-            var pdfPath = $"~/Temp/{Guid.NewGuid()}.pdf";
+            var fileName = $"{Guid.NewGuid()}.pdf";
+            var pdfPath = $"/Temp/{fileName}";
             PdfHelper.SaveImageAsPdf(inputStream, pdfPath);
 
             //var fileName = string.Join(string.Empty, originalFile.Headers.ContentDisposition.FileName.Split(Path.GetInvalidFileNameChars()));
@@ -38,7 +36,7 @@ namespace PdfViewer.Controllers
             //var saveImagePath = $"Temp/{Guid.NewGuid()}_{fileName}";
             //image.Save(HttpContext.Current.Server.MapPath(saveImagePath));
 
-            return Ok();
+            return Ok(new { url = pdfPath, fileName }); ;
         }
     }
 }
