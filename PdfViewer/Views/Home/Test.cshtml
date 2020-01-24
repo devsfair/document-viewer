@@ -1,0 +1,34 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Test</title>
+    <style>
+        #the-canvas {
+            border: 1px solid black;
+            direction: ltr;
+        }
+    </style>
+    <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+</head>
+<body>
+    <h1>PDF.js Previous/Next example</h1>
+
+    <div>
+        <button id="prev">Previous</button>
+        <button id="next">Next</button>
+        &nbsp; &nbsp;
+        <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+    </div>
+
+    <canvas id="the-canvas"></canvas>
+
+    <script src="~/Scripts/test.js"></script>
+</body>
+</html>

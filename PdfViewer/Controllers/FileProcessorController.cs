@@ -11,8 +11,8 @@ namespace PdfViewer.Controllers
     [RoutePrefix("api/file-processor")]
     public class FileProcessorController : ApiController
     {
-        [Route("get-pdf")]
-        [HttpGet]
+        [Route("process-image")]
+        [HttpPost]
         public async Task<IHttpActionResult> GetPdf()
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -30,9 +30,8 @@ namespace PdfViewer.Controllers
                 return BadRequest("You must upload an image.");
 
             var inputStream = await originalFile.ReadAsStreamAsync();
-            var pdfHelper = new PdfHelper();
-            var pdfPath = $"Temp/{Guid.NewGuid()}.pdf";
-            pdfHelper.SaveImageAsPdf(inputStream, pdfPath);
+            var pdfPath = $"~/Temp/{Guid.NewGuid()}.pdf";
+            PdfHelper.SaveImageAsPdf(inputStream, pdfPath);
 
             //var fileName = string.Join(string.Empty, originalFile.Headers.ContentDisposition.FileName.Split(Path.GetInvalidFileNameChars()));
             //var image = Image.FromStream(inputStream);

@@ -2,6 +2,7 @@
 using PdfSharp.Pdf;
 using System;
 using System.IO;
+using System.Web;
 
 namespace PdfViewer.Extensions.Helpers
 {
@@ -11,7 +12,7 @@ namespace PdfViewer.Extensions.Helpers
         {
         }
 
-        public void SaveImageAsPdf(Stream imageStream, string pdfFileName)
+        public static void SaveImageAsPdf(Stream imageStream, string pdfFileName)
         {
             try
             {
@@ -31,7 +32,8 @@ namespace PdfViewer.Extensions.Helpers
                         gfx.DrawImage(img, 0, 0);
                     }
 
-                    document.Save(pdfFileName);
+                    var physicalPath = HttpContext.Current.Server.MapPath(pdfFileName);
+                    document.Save(physicalPath);
                 }
             }
             catch (Exception ex)

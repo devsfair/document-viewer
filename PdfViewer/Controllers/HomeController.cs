@@ -9,5 +9,11 @@ namespace PdfViewer.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult Test()
+        {
+            return View();
+        }
     }
 }
