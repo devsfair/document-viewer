@@ -6,13 +6,9 @@ using System.Web;
 
 namespace PdfViewer.Extensions.Helpers
 {
-    public class PdfHelper
+    public static class PdfHelper
     {
-        public PdfHelper()
-        {
-        }
-
-        public static void SaveImageAsPdf(Stream imageStream, string pdfFileName)
+        public static void SaveImageAsPdf(Stream imageStream, string fileName)
         {
             try
             {
@@ -21,18 +17,11 @@ namespace PdfViewer.Extensions.Helpers
                     PdfPage page = document.AddPage();
                     using (XImage img = XImage.FromStream(imageStream))
                     {
-                        //// Calculate new height to keep image ratio
-                        //var height = (int)(((double)width / (double)img.PixelWidth) * img.PixelHeight);
-
-                        //// Change PDF Page size to match image
-                        //page.Width = width;
-                        //page.Height = height;
-
                         XGraphics gfx = XGraphics.FromPdfPage(page);
                         gfx.DrawImage(img, 0, 0);
                     }
 
-                    var physicalPath = HttpContext.Current.Server.MapPath(pdfFileName);
+                    var physicalPath = HttpContext.Current.Server.MapPath(fileName);
                     document.Save(physicalPath);
                 }
             }
