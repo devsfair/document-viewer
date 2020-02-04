@@ -53,6 +53,8 @@ namespace PdfViewer.Extensions.Helpers
                             imageEncoder = ici.Find(x => x.FormatID == ImageFormat.Exif.Guid);
                         else if(inImage.RawFormat.Guid == ImageFormat.Wmf.Guid)
                             imageEncoder = ici.Find(x => x.FormatID == ImageFormat.Wmf.Guid);
+                        else if (inImage.RawFormat.Guid == ImageFormat.Icon.Guid)
+                            imageEncoder = ici.Find(x => x.FormatID == ImageFormat.Icon.Guid);
 
                         if (imageEncoder != null)
                         {
