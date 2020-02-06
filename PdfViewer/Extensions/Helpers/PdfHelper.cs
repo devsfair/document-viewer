@@ -15,10 +15,15 @@ namespace PdfViewer.Extensions.Helpers
                 using (var document = new PdfDocument())
                 {
                     PdfPage page = document.AddPage();
-                    using (XImage img = XImage.FromStream(imageStream))
+                    using (XImage image = XImage.FromStream(imageStream))
                     {
+                        double imageWidth = image.PointWidth;
+                        double imageHeight = image.PointHeight;
+                        double pageWidth = page.Width;
+                        double pageHeight = page.Height;
+
                         XGraphics gfx = XGraphics.FromPdfPage(page);
-                        gfx.DrawImage(img, 0, 0);
+                        gfx.DrawImage(image, (pageWidth-imageWidth)/2, (pageHeight-imageHeight)/2);
                     }
 
                     var physicalPath = HttpContext.Current.Server.MapPath(fileName);
