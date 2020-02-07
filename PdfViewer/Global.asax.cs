@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using FluentScheduler;
+using PdfViewer.Extensions.Jobs;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -14,6 +16,9 @@ namespace PdfViewer
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // Init Temp Directory Cleanup
+            JobManager.Initialize(new JobRegistry());
         }
     }
 }
