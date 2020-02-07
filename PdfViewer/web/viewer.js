@@ -4323,7 +4323,7 @@ var defaultOptions = {
     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
   },
   defaultUrl: {
-    value: "temp/file-example_PDF_1MB.pdf",
+    value: "web/file-example_PDF_1MB.pdf",
     kind: OptionKind.VIEWER
   },
   defaultZoomValue: {

@@ -269,6 +269,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Temp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE" />
@@ -277,7 +278,6 @@
     <None Include="packages.config" />
     <Content Include="Scripts\axios.map" />
     <Content Include="Scripts\axios.min.map" />
-    <Content Include="Temp\file-example_PDF_1MB.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\Home\Test.cshtml" />
     <Content Include="web\cmaps\78-EUC-H.bcmap" />
@@ -449,7 +449,6 @@
     <Content Include="web\cmaps\UniKS-UTF8-V.bcmap" />
     <Content Include="web\cmaps\V.bcmap" />
     <Content Include="web\cmaps\WP-Symbol.bcmap" />
-    <Content Include="web\compressed.tracemonkey-pldi-09.pdf" />
     <Content Include="web\locale\ach\viewer.properties" />
     <Content Include="web\locale\af\viewer.properties" />
     <Content Include="web\locale\an\viewer.properties" />
@@ -553,6 +552,7 @@
     <Content Include="web\locale\zh-CN\viewer.properties" />
     <Content Include="web\locale\zh-TW\viewer.properties" />
     <Content Include="web\viewer.js.map" />
+    <Content Include="web\file-example_PDF_1MB.pdf" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
