@@ -1,5 +1,7 @@
 ﻿using PdfViewer.Extensions.Helpers;
 using PdfViewer.Extensions.Providers;
+using PdfViewer.Extensions.Results;
+using PdfViewer.Models;
 using System;
 using System.Drawing;
 using System.IO;
@@ -55,12 +57,20 @@ namespace PdfViewer.Controllers
                         image.Save(HttpContext.Current.Server.MapPath($"/Temp/{fileName}{extension}"));
                 }
 
-                return Ok(new { url = pdfPath, fileName = $"{fileName}.pdf" });
+                return Ok(new { url = pdfPath, fileName = $"{fileName}.pdf", folderPath = fileName });
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }            
+        }
+
+        [Route("download")]
+        [HttpGet]
+        public IHttpActionResult Download(string path)
+        {
+            var downloadFileInfo = new DownloadFileViewModel(path);
+            return new FileActionResult(downloadFileInfo);
         }
     }
 }
