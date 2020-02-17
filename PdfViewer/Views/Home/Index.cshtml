@@ -11,19 +11,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>PDF.js viewer</title>
 
-    <link href="~/web/viewer.css" rel="stylesheet" />
+    <link href="~/Scripts/pdfjs/viewer.css" rel="stylesheet" />
 
     <!-- This snippet is used in production (included from viewer.html) -->
-    <link rel="resource" type="application/l10n" href="~/web/locale/locale.properties">
-    <script src="~/Scripts/polyfill.js"></script>
-    <script src="~/build/pdf.js"></script>
+    <link rel="resource" type="application/l10n" href="~/Scripts/pdfjs/locale/locale.properties">
+    <script src="~/Scripts/pdfjs/pdf.js"></script>
     <script src="~/Scripts/axios.min.js"></script>
-    <script src="~/web/viewer.js"></script>
+    <script src="~/Scripts/pdfjs/viewer.js"></script>
 </head>
 
 <body tabindex="1" class="loadingInProgress">
     <div id="outerContainer">
-
         <div id="sidebarContainer">
             <div id="toolbarSidebar">
                 <div class="splitToolbarButton toggled">
