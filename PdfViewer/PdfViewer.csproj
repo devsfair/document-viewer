@@ -256,6 +256,7 @@
     <Content Include="Scripts\pdfjs\images\treeitem-expanded%402x.png" />
     <Content Include="Scripts\pdfjs\images\treeitem-expanded.png" />
     <Content Include="Scripts\pdfjs\pdf.js" />
+    <Content Include="Scripts\pdfjs\pdf.viewer.js" />
     <Content Include="Scripts\pdfjs\pdf.worker.js" />
     <Content Include="Scripts\pdfjs\viewer.css" />
     <Content Include="Scripts\pdfjs\viewer.js" />
